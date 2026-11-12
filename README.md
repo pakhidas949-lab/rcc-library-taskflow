@@ -87,14 +87,13 @@ Task1_priya/
 A walkthrough of the whole flow — the landing page, the staff sign-in, the live
 dashboards and the task desk.
 
-[![Watch the demo](<video controls src="https://github.com/pakhidas949-lab/rcc-library-taskflow/blob/main/docs/demo.mp4" title="./taskflow-api/docs/demo.mp4"></video>)
+[![Watch the TaskFlow API demo](./taskflow-api/docs/thumbnail.jpg)](./taskflow-api/docs/demo.mp4)
 
-**[▶ Download the recording](./taskflow-api/docs/demo.mp4)** · also served by the running API at
-<http://localhost:5000/docs/demo.mp4>
-
-> The recording lives at `taskflow-api/docs/demo.mp4` and the poster frame at
-> `taskflow-api/docs/thumbnail.jpg`. Drop your own recording over them and the thumbnail
-> and the link pick it up automatically.
+> Click the thumbnail to watch the recording.
+>
+> The video lives at `taskflow-api/docs/demo.mp4` and the poster frame at
+> `taskflow-api/docs/thumbnail.jpg`. Drop your own recording over them and the
+> thumbnail and the link pick it up automatically — no README edit needed.
 
 ---
 
