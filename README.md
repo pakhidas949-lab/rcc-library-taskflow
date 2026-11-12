@@ -483,33 +483,51 @@ restarts and scale across instances.
 A walkthrough of the whole flow — the landing page, the staff sign-in, the live
 dashboards and the task desk.
 
-[![Watch the TaskFlow API demo](./docs/thumbnail.jpg)](./docs/demo.mp4)
+![Watch the TaskFlow API demo](./docs/demo.gif)
 
-> Click the thumbnail to watch the recording.
+> The preview plays right here in the README — no download, no extra clicks.
 >
-> The recording lives at **`docs/demo.mp4`** and the poster frame at **`docs/thumbnail.jpg`**.
-> Drop your own recording straight in over them — the thumbnail and the link pick it up
-> automatically, no README edit needed.
+> **Why a GIF?** GitHub's file viewer does not render a video player for MP4, and
+> `raw.githubusercontent.com` serves repository MP4s as `application/octet-stream`,
+> so the browser downloads the file instead of playing it. An animated GIF is the only
+> format GitHub renders natively inside a README.
 >
-> **Keep the file small.** GitHub refuses to preview files above its blob-view limit and
-> shows *"Sorry about that, but we can't show files that are this big right now."* — which
-> would break the click-through. After swapping in a new recording, compress and refresh
-> the poster:
+> The GIF is generated from `docs/demo.mp4`; the poster frame lives at
+> `docs/thumbnail.jpg`. To publish a new recording:
 >
 > ```bash
-> python tools/compress-demo.py      # re-encode under the GitHub preview limit
-> python tools/make-thumbnail.py     # refresh the poster frame
+> python tools/compress-demo.py    # shrink the mp4 under GitHub's preview limit
+> python tools/make-demo-gif.py    # rebuild the inline preview
+> python tools/make-thumbnail.py   # refresh the poster frame
 > ```
->
-> <details>
-> <summary>Absolute raw URLs (if you prefer hard-coded links)</summary>
->
-> ```markdown
-> [![Watch the demo](https://raw.githubusercontent.com/pakhidas949-lab/rcc-library-taskflow/main/taskflow-api/docs/thumbnail.jpg)](https://raw.githubusercontent.com/pakhidas949-lab/rcc-library-taskflow/main/taskflow-api/docs/demo.mp4)
-> ```
->
-> </details>
 
+### How the demo preview is built
+
+The whole pipeline is reproducible — four scripts, no manual steps.
+
+| # | Script | What it does |
+|---|---|---|
+| 1 | `tools/record-demo.py` | Launches **headless Chrome** and drives it over the **Chrome DevTools Protocol**. It walks the real user journey — landing → services → collections → sign-in → dashboard → task cleared → task desk → borrowers → Swagger — clicking and typing through `Runtime.evaluate`, capturing a burst of frames per step with `Page.captureScreenshot`. |
+| 2 | `tools/compress-demo.py` | Re-encodes the capture to **H.264 / 960px / CRF 30** with `+faststart`, so the `moov` atom sits at the front and playback starts instantly. |
+| 3 | `tools/make-demo-gif.py` | Builds an **animated GIF** with ffmpeg's `palettegen` + `paletteuse` (Bayer dithering, 16-colour adaptive palette) at 6 fps. |
+| 4 | `tools/make-thumbnail.py` | Samples 10 frames from the clip and keeps the one with the highest pixel variance, so the poster is never a black frame or a blank transition. |
+
+Two guards worth knowing about:
+
+- **Size** — GitHub will not preview a file above its blob-view limit and shows
+  *"Sorry about that, but we can't show files that are this big right now."*
+  Step 2 keeps the MP4 well under it.
+- **Format** — GitHub's file viewer renders **no video player for MP4** (verified
+  against a known-good control file), and `raw.githubusercontent.com` serves
+  repository MP4s as `application/octet-stream`, which makes the browser
+  *download* the file instead of playing it. An animated GIF is the only format
+  GitHub renders natively inside a README — so that is what the embed points at.
+
+`npm run check:demo` verifies the whole chain: the embed points at a real GIF, the
+GIF header is valid, no download link or `<video>` tag survived, and every asset
+resolves.
+
+---
 ### What to record
 
 | # | Scene | Shows off |
