@@ -84,16 +84,17 @@ Task1_priya/
 
 ## The demo recording
 
-A walkthrough of the whole flow lives at `taskflow-api/docs/demo.mp4` and is embedded in
-the project README. Drop your own recording straight in over it — nothing else changes.
+A walkthrough of the whole flow — the landing page, the staff sign-in, the live
+dashboards and the task desk.
 
-<!-- Replace taskflow-api/docs/demo.mp4 with your own recording. -->
-<video src="taskflow-api/docs/demo.mp4" controls width="720" preload="metadata">
-  Your browser cannot play this video — <a href="taskflow-api/docs/demo.mp4">download it instead</a>.
-</video>
+[![Watch the demo](./taskflow-api/docs/thumbnail.jpg)](./taskflow-api/docs/demo.mp4)
 
-**[▶ Download the recording](taskflow-api/docs/demo.mp4)** · also served by the running API at
+**[▶ Download the recording](./taskflow-api/docs/demo.mp4)** · also served by the running API at
 <http://localhost:5000/docs/demo.mp4>
+
+> The recording lives at `taskflow-api/docs/demo.mp4` and the poster frame at
+> `taskflow-api/docs/thumbnail.jpg`. Drop your own recording over them and the thumbnail
+> and the link pick it up automatically.
 
 ---
 
