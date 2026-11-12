@@ -1,0 +1,70 @@
+/**
+ * Artillery load-test profile for the TaskFlow API.
+ *
+ * Run with:
+ *   npx artillery run tests/load/artillery.yml
+ *
+ * Quick smoke test (as used in the task brief):
+ *   npx artillery quick --count 50 -n 20 http://localhost:5000/api/tasks
+ */
+config:
+  target: "{{ $env.TARGET_URL | default 'http://localhost:5000' }}"
+  phases:
+    - name: "Warm up"
+      duration: 10
+      arrivalRate: 10
+      rampTo: 20
+    - name: "Steady load"
+      duration: 30
+      arrivalRate: 20
+    - name: "Stress"
+      duration: 20
+      arrivalRate: 50
+    - name: "Recovery"
+      duration: 10
+      arrivalRate: 10
+  # Abort the run if more than 1% of requests fail.
+  ensure: { thresholds: { "http.p99": 500, "http.req.failed": 1 } }
+  variables:
+    taskText:
+      - "Load test task"
+      - "Measure API throughput"
+
+scenarios:
+  - name: "Read heavy traffic"
+    flow:
+      - get:
+          url: "/api/tasks"
+          expect:
+            - statusCode: 200
+            - contentType: "application/json"
+
+  - name: "Full CRUD cycle"
+    flow:
+      - post:
+          url: "/api/tasks"
+          json:
+            text: "{{ taskText }}"
+          expect:
+            - statusCode: 201
+      - get:
+          url: "/api/tasks"
+          expect:
+            - statusCode: 200
+      - put:
+          url: "/api/tasks/1"
+          json:
+            completed: true
+          expect:
+            - statusCode: 200
+      - delete:
+          url: "/api/tasks/1"
+          expect:
+            - statusCode: 204
+
+  - name: "Health probe"
+    flow:
+      - get:
+          url: "/api/health"
+          expect:
+            - statusCode: 200
